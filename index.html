@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organiza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <h1>Organiza</h1>
+        <div id="current-date"></div>
+      </div>
+      <div class="header-buttons">
+        <button class="dark-toggle" id="dark-toggle">Modo Escuro</button>
+        <button id="connect-google">Conectar Google Calendar</button>
+        <button id="add-button">+ Nova Conta</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="accounts-list"></main>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Modal para Adicionar/Editar Conta -->
+  <div id="account-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2 id="modal-title">Nova Conta</h2>
+      <form id="account-form">
+        <label>Nome da conta</label>
+        <input type="text" id="modal-name" required placeholder="Ex: Energia Elétrica">
+
+        <label>Valor (R$)</label>
+        <input type="text" id="modal-value" required placeholder="0,00" inputmode="decimal">
+
+        <label>Data de vencimento</label>
+        <input type="date" id="modal-due-date" required>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel">Cancelar</button>
+          <button type="submit" id="modal-save">Salvar Conta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal para Confirmação de Exclusão -->
+  <div id="delete-modal" class="modal-overlay">
+    <div class="modal-content delete-modal">
+      <h2>Confirmar Exclusão</h2>
+      <p>Tem certeza que deseja excluir a conta <strong id="delete-account-name"></strong>?</p>
+      <div class="modal-actions">
+        <button id="delete-cancel">Cancelar</button>
+        <button id="delete-confirm" class="danger">Excluir Permanentemente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript externo -->
+  <script src="script.js"></script>
+
+  <!-- Bibliotecas Google -->
+  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+</html>
