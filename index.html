@@ -8,6 +8,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- ==================== TELA DE BOAS-VINDAS ==================== -->
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-content">
+      <h1>ORGANIZA</h1>
+      <p>Seu site de organização de contas mais fácil e prático do Brasil.</p>
+      <p class="subtitle">Controle suas contas mensais, veja o que está vencendo e nunca mais pague juros por atraso.</p>
+      <button id="start-button" class="start-button">Começar a Organizar</button>
+    </div>
+  </div>
+
+  <!-- ==================== CONTEÚDO PRINCIPAL DO APP ==================== -->
   <header>
     <div class="header-content">
       <div>
@@ -16,12 +28,10 @@
       </div>
       <div class="header-buttons">
         <button class="dark-toggle" id="dark-toggle">Modo Escuro</button>
-        <button id="connect-google">Conectar Google Calendar</button>
         <button id="add-button">+ Nova Conta</button>
       </div>
     </div>
   </header>
-
   <main id="accounts-list"></main>
 
   <!-- Toast -->
@@ -34,13 +44,10 @@
       <form id="account-form">
         <label>Nome da conta</label>
         <input type="text" id="modal-name" required placeholder="Ex: Energia Elétrica">
-
         <label>Valor (R$)</label>
         <input type="text" id="modal-value" required placeholder="0,00" inputmode="decimal">
-
         <label>Data de vencimento</label>
         <input type="date" id="modal-due-date" required>
-
         <div class="modal-actions">
           <button type="button" id="modal-cancel">Cancelar</button>
           <button type="submit" id="modal-save">Salvar Conta</button>
@@ -61,11 +68,6 @@
     </div>
   </div>
 
-  <!-- JavaScript externo -->
   <script src="script.js"></script>
-
-  <!-- Bibliotecas Google -->
-  <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-  <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </body>
 </html>
