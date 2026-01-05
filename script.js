@@ -17,6 +17,19 @@ toggle.onclick = () => {
   localStorage.setItem('dark', isDark ? 'on' : 'off');
 };
 
+// ==================== TELA DE BOAS-VINDAS ====================
+const welcomeOverlay = document.getElementById('welcome-overlay');
+const startButton = document.getElementById('start-button');
+
+if (localStorage.getItem('welcomeSeen') === 'true') {
+  welcomeOverlay.classList.add('welcome-hidden');
+} else {
+  startButton.onclick = () => {
+    welcomeOverlay.classList.add('welcome-hidden');
+    localStorage.setItem('welcomeSeen', 'true');
+  };
+}
+
 const defaultAccounts = [
   { name: 'Energia Elétrica', value: 178.90, dueDate: '2026-01-20', recurrence: 'mensal', paid: false },
   { name: 'Internet Fibra', value: 99.90, dueDate: '2026-01-10', recurrence: 'mensal', paid: false }
@@ -27,7 +40,7 @@ function save() {
   localStorage.setItem('accounts', JSON.stringify(accounts));
 }
 
-// Correção de fuso horário com T12:00:00
+// Correção de fuso horário
 function getStatus(account) {
   if (account.paid) return 'paid';
   const today = new Date();
@@ -97,7 +110,7 @@ function closeDeleteModal() {
   deletingIndex = null;
 }
 
-// Formatação do valor em reais
+// Formatação do valor
 inputValue.addEventListener('input', (e) => {
   let value = e.target.value.replace(/\D/g, '');
   value = (value / 100).toFixed(2).replace('.', ',');
@@ -105,7 +118,7 @@ inputValue.addEventListener('input', (e) => {
   e.target.value = value;
 });
 
-// Salvamento do formulário
+// Salvamento
 form.addEventListener('submit', (e) => {
   e.preventDefault();
  
@@ -132,7 +145,7 @@ form.addEventListener('submit', (e) => {
   closeAccountModal();
 });
 
-// Eventos dos botões
+// Eventos
 document.getElementById('add-button').onclick = () => openAccountModal(false);
 document.getElementById('modal-cancel').onclick = closeAccountModal;
 accountModal.onclick = (e) => { if (e.target === accountModal) closeAccountModal(); };
@@ -202,20 +215,6 @@ function toast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
-}
-// ==================== TELA DE BOAS-VINDAS ====================
-const welcomeOverlay = document.getElementById('welcome-overlay');
-const startButton = document.getElementById('start-button');
-
-// Verifica se o usuário já viu a tela de boas-vindas
-if (localStorage.getItem('welcomeSeen') === 'true') {
-  welcomeOverlay.classList.add('welcome-hidden');
-} else {
-  // Mostra a tela (já está visível por padrão)
-  startButton.onclick = () => {
-    welcomeOverlay.classList.add('welcome-hidden');
-    localStorage.setItem('welcomeSeen', 'true'); // Não mostra mais
-  };
 }
 
 render();
