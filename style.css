@@ -20,7 +20,6 @@
   --transition: all 0.3s ease;
   --border-radius: 24px;
 }
-
 body.dark {
   --bg-body: linear-gradient(135deg, #020617 0%, #0f172a 100%);
   --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
@@ -41,7 +40,6 @@ body.dark {
   --button-shadow: 0 4px 12px rgba(0,0,0,.3);
   --button-shadow-hover: 0 8px 20px rgba(0,0,0,.4);
 }
-
 body {
   font-family: 'Inter', sans-serif;
   margin: 0;
@@ -50,7 +48,6 @@ body {
   min-height: 100vh;
   transition: var(--transition);
 }
-
 header {
   background: var(--header-gradient);
   padding: 80px 30px 60px;
@@ -59,7 +56,6 @@ header {
   overflow: hidden;
   text-align: center;
 }
-
 header::before {
   content: '';
   position: absolute;
@@ -70,19 +66,16 @@ header::before {
   background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
   animation: glow 12s infinite alternate;
 }
-
 @keyframes glow {
   0% { transform: rotate(0deg) scale(1); }
   100% { transform: rotate(10deg) scale(1.3); }
 }
-
 .header-content {
   max-width: 1200px;
   margin: auto;
   position: relative;
   z-index: 1;
 }
-
 h1 {
   font-size: 72px;
   font-weight: 900;
@@ -95,19 +88,16 @@ h1 {
   text-shadow: 0 4px 20px rgba(0,0,0,0.2);
   animation: titleGlow 4s infinite alternate;
 }
-
 @keyframes titleGlow {
   0% { text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
   100% { text-shadow: 0 8px 40px rgba(0,0,0,0.4); }
 }
-
 #current-date {
   font-size: 26px;
   opacity: 0.95;
   margin-top: 16px;
   font-weight: 600;
 }
-
 .header-buttons {
   display: flex;
   justify-content: center;
@@ -115,7 +105,6 @@ h1 {
   margin-top: 40px;
   flex-wrap: wrap;
 }
-
 button {
   padding: 18px 36px;
   border-radius: var(--border-radius);
@@ -129,7 +118,6 @@ button {
   position: relative;
   overflow: hidden;
 }
-
 button::before {
   content: '';
   position: absolute;
@@ -140,20 +128,15 @@ button::before {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
   transition: left 0.6s;
 }
-
 button:hover::before {
   left: 100%;
 }
-
 button:hover {
   transform: translateY(-6px);
   box-shadow: var(--button-shadow-hover);
 }
-
 #add-button { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-#connect-google { background: linear-gradient(135deg, #ea4335 0%, #db4437 100%); }
 .dark-toggle { background: linear-gradient(135deg, rgba(255,255,255,.25) 0%, rgba(255,255,255,.15) 100%); }
-
 main {
   max-width: 1200px;
   margin: auto;
@@ -162,7 +145,6 @@ main {
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 30px;
 }
-
 .account-card {
   background: var(--card-bg);
   border-left: 8px solid;
@@ -173,7 +155,6 @@ main {
   position: relative;
   overflow: hidden;
 }
-
 .account-card::before {
   content: '';
   position: absolute;
@@ -183,29 +164,24 @@ main {
   height: 6px;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
 }
-
 .account-card:hover {
   transform: translateY(-10px);
   box-shadow: var(--card-shadow-hover);
 }
-
 .account-card.paid { background: var(--paid-bg); border-color: var(--paid-border); color: var(--paid-text); }
 .account-card.pending { background: var(--pending-bg); border-color: var(--pending-border); color: var(--pending-text); }
 .account-card.overdue { background: var(--overdue-bg); border-color: var(--overdue-border); color: var(--overdue-text); }
-
 .account-name {
   font-size: 28px;
   font-weight: 800;
   margin-bottom: 12px;
 }
-
 .account-details {
   font-size: 18px;
   opacity: 0.9;
   margin-bottom: 20px;
   font-weight: 500;
 }
-
 .days-info {
   font-size: 16px;
   font-weight: 600;
@@ -215,14 +191,12 @@ main {
   display: inline-block;
   background: rgba(0,0,0,0.05);
 }
-
 .main-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 20px;
 }
-
 .action-btn {
   padding: 12px 24px;
   border-radius: 16px;
@@ -230,22 +204,16 @@ main {
   font-size: 14px;
   color: #fff;
 }
-
 .pay-button { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
-.calendar-button { background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%); }
 .edit-button { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
 .delete-button { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-
-/* Botão Desmarcar como Paga - vermelho escuro */
-.unpay-button { 
-  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%); 
+.unpay-button {
+  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
 }
-
 .unpay-button:hover {
   transform: translateY(-4px);
   box-shadow: var(--button-shadow-hover);
 }
-
 #toast {
   position: fixed;
   bottom: 30px;
@@ -261,13 +229,10 @@ main {
   font-weight: 600;
   z-index: 1000;
 }
-
 #toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(-10px);
 }
-
-/* ==================== MODAL DE CONTA (ADICIONAR/EDITAR) ==================== */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -281,12 +246,10 @@ main {
   transition: var(--transition);
   z-index: 1000;
 }
-
 .modal-overlay.show {
   opacity: 1;
   visibility: visible;
 }
-
 .modal-content {
   background: var(--card-bg);
   border-radius: var(--border-radius);
@@ -297,11 +260,9 @@ main {
   transform: scale(0.9);
   transition: var(--transition);
 }
-
 .modal-overlay.show .modal-content {
   transform: scale(1);
 }
-
 .modal-content h2 {
   margin-top: 0;
   font-size: 32px;
@@ -311,14 +272,12 @@ main {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .modal-content label {
   display: block;
   margin: 20px 0 8px;
   font-weight: 600;
   color: var(--text-primary);
 }
-
 .modal-content input {
   width: 100%;
   padding: 16px 20px;
@@ -330,67 +289,249 @@ main {
   font-family: 'Inter', sans-serif;
   transition: var(--transition);
 }
-
 .modal-content input:focus {
   outline: none;
   background: rgba(0,0,0,0.1);
   box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
 }
-
 .modal-actions {
   display: flex;
   gap: 16px;
   margin-top: 32px;
   justify-content: flex-end;
 }
-
 #modal-cancel {
   background: rgba(0,0,0,0.1);
   color: var(--text-primary);
 }
-
 #modal-save {
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 }
-
 #modal-cancel:hover, #modal-save:hover {
   transform: translateY(-4px);
 }
-
-/* ==================== MODAL DE EXCLUSÃO ==================== */
 .delete-modal {
   text-align: center;
   max-width: 420px;
 }
-
 .delete-modal h2 {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .delete-modal p {
   font-size: 18px;
   margin: 24px 0;
   color: var(--text-primary);
 }
-
 #delete-confirm.danger {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
-
 #delete-confirm.danger:hover {
   transform: translateY(-4px);
   box-shadow: var(--button-shadow-hover);
 }
-
 #delete-cancel {
   background: rgba(0,0,0,0.1);
   color: var(--text-primary);
 }
-
 #delete-cancel:hover,
 #delete-confirm:hover {
   transform: translateY(-4px);
+}
+
+/* ==================== TELA DE BOAS-VINDAS ==================== */
+.welcome-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.welcome-content {
+  text-align: center;
+  color: white;
+  padding: 40px;
+  max-width: 600px;
+}
+.welcome-content h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin: 0 0 20px;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #ffffff 0%, #bde0fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.welcome-content p {
+  font-size: 24px;
+  margin: 20px 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+.subtitle {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 50px;
+}
+.start-button {
+  padding: 20px 50px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+.start-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+.welcome-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ==================== RODAPÉ ==================== */
+.site-footer {
+  background: var(--card-bg);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding: 40px 20px;
+  margin-top: 80px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+body.dark .site-footer {
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.footer-content {
+  max-width: 1200px;
+  margin: auto;
+}
+.site-footer p {
+  margin: 10px 0;
+}
+.footer-links {
+  margin: 20px 0;
+}
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-primary);
+  text-decoration: none;
+  margin: 0 20px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.footer-links a:hover {
+  color: #2563eb;
+}
+.social-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+  vertical-align: middle;
+  transition: var(--transition);
+}
+.footer-links a:hover .social-icon {
+  transform: scale(1.15);
+}
+body.dark .footer-links a:hover {
+  color: #3b82f6;
+}
+.footer-copy {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-top: 30px;
+}
+
+/* ==================== RESPONSIVO ==================== */
+@media (max-width: 768px) {
+  main {
+    padding: 20px 15px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .account-card {
+    padding: 24px;
+    border-radius: 20px;
+  }
+  .account-name {
+    font-size: 24px;
+  }
+  .account-details {
+    font-size: 16px;
+  }
+  .days-info {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+  .main-actions {
+    gap: 10px;
+  }
+  .action-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  header {
+    padding: 60px 20px 40px;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  #current-date {
+    font-size: 20px;
+  }
+  .header-buttons {
+    gap: 12px;
+  }
+  button {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+  .welcome-content h1 {
+    font-size: 48px;
+  }
+  .welcome-content p {
+    font-size: 20px;
+  }
+  .subtitle {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  .start-button {
+    padding: 18px 40px;
+    font-size: 18px;
+  }
+  .site-footer {
+    padding: 30px 15px;
+    margin-top: 60px;
+  }
+  .footer-links a {
+    display: flex;
+    margin: 15px 0;
+    justify-content: center;
+  }
+  .social-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 30px 20px;
+    width: 95%;
+  }
+  .modal-content h2 {
+    font-size: 28px;
+  }
 }
