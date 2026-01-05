@@ -1,311 +1,483 @@
-// ==================== CONFIGURAÇÃO GOOGLE CALENDAR ====================
-const CLIENT_ID = '588348873658-u9m50e1h3itgnq28f84p9jrq4sq06k4n.apps.googleusercontent.com';
-const API_KEY = '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  ';
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
-
-let tokenClient;
-let gapiInited = false;
-let gisInited = false;
-let googleConnected = false;
-
-function gapiLoaded() {
-  gapi.load('client', initializeGapiClient);
+:root {
+  --bg-body: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+  --header-gradient: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --card-bg: #ffffff;
+  --paid-bg: #ecfdf5;
+  --paid-border: #10b981;
+  --paid-text: #065f46;
+  --pending-bg: #fefce8;
+  --pending-border: #f59e0b;
+  --pending-text: #92400e;
+  --overdue-bg: #fef2f2;
+  --overdue-border: #ef4444;
+  --overdue-text: #7f1d1d;
+  --card-shadow: 0 8px 24px rgba(15,23,42,.08);
+  --card-shadow-hover: 0 18px 40px rgba(15,23,42,.15);
+  --button-shadow: 0 4px 12px rgba(0,0,0,.1);
+  --button-shadow-hover: 0 8px 20px rgba(0,0,0,.15);
+  --transition: all 0.3s ease;
+  --border-radius: 24px;
+}
+body.dark {
+  --bg-body: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+  --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  --text-primary: #e5e7eb;
+  --text-secondary: #94a3b8;
+  --card-bg: #1e293b;
+  --paid-bg: #022c22;
+  --paid-border: #34d399;
+  --paid-text: #a7f3d0;
+  --pending-bg: #3f2a03;
+  --pending-border: #fbbf24;
+  --pending-text: #fde68a;
+  --overdue-bg: #3f0d0d;
+  --overdue-border: #f87171;
+  --overdue-text: #fecaca;
+  --card-shadow: 0 10px 30px rgba(0,0,0,.5);
+  --card-shadow-hover: 0 20px 50px rgba(0,0,0,.7);
+  --button-shadow: 0 4px 12px rgba(0,0,0,.3);
+  --button-shadow-hover: 0 8px 20px rgba(0,0,0,.4);
+}
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: var(--transition);
+}
+header {
+  background: var(--header-gradient);
+  padding: 80px 30px 60px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  animation: glow 12s infinite alternate;
+}
+@keyframes glow {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(10deg) scale(1.3); }
+}
+.header-content {
+  max-width: 1200px;
+  margin: auto;
+  position: relative;
+  z-index: 1;
+}
+h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #ffffff 0%, #bde0fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  animation: titleGlow 4s infinite alternate;
+}
+@keyframes titleGlow {
+  0% { text-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+  100% { text-shadow: 0 8px 40px rgba(0,0,0,0.4); }
+}
+#current-date {
+  font-size: 26px;
+  opacity: 0.95;
+  margin-top: 16px;
+  font-weight: 600;
+}
+.header-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+button {
+  padding: 18px 36px;
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  color: #fff;
+  transition: var(--transition);
+  box-shadow: var(--button-shadow);
+  position: relative;
+  overflow: hidden;
+}
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s;
+}
+button:hover::before {
+  left: 100%;
+}
+button:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--button-shadow-hover);
+}
+#add-button { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+#connect-google { background: linear-gradient(135deg, #ea4335 0%, #db4437 100%); }
+.dark-toggle { background: linear-gradient(135deg, rgba(255,255,255,.25) 0%, rgba(255,255,255,.15) 100%); }
+main {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 30px;
+}
+.account-card {
+  background: var(--card-bg);
+  border-left: 8px solid;
+  border-radius: var(--border-radius);
+  padding: 32px;
+  box-shadow: var(--card-shadow);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.account-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+}
+.account-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--card-shadow-hover);
+}
+.account-card.paid { background: var(--paid-bg); border-color: var(--paid-border); color: var(--paid-text); }
+.account-card.pending { background: var(--pending-bg); border-color: var(--pending-border); color: var(--pending-text); }
+.account-card.overdue { background: var(--overdue-bg); border-color: var(--overdue-border); color: var(--overdue-text); }
+.account-name {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.account-details {
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.days-info {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  display: inline-block;
+  background: rgba(0,0,0,0.05);
+}
+.main-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.action-btn {
+  padding: 12px 24px;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+.pay-button { background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); }
+.calendar-button { background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%); }
+.edit-button { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+.delete-button { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.unpay-button {
+  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+}
+.unpay-button:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--button-shadow-hover);
+}
+#toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17,17,17,0.95);
+  color: #fff;
+  padding: 18px 36px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  font-weight: 600;
+  z-index: 1000;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-10px);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 1000;
+}
+.modal-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-content {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 40px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: var(--card-shadow-hover);
+  transform: scale(0.9);
+  transition: var(--transition);
+}
+.modal-overlay.show .modal-content {
+  transform: scale(1);
+}
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.modal-content label {
+  display: block;
+  margin: 20px 0 8px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.modal-content input {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: none;
+  background: rgba(0,0,0,0.05);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+.modal-content input:focus {
+  outline: none;
+  background: rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
+}
+.modal-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  justify-content: flex-end;
+}
+#modal-cancel {
+  background: rgba(0,0,0,0.1);
+  color: var(--text-primary);
+}
+#modal-save {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+#modal-cancel:hover, #modal-save:hover {
+  transform: translateY(-4px);
+}
+.delete-modal {
+  text-align: center;
+  max-width: 420px;
+}
+.delete-modal h2 {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.delete-modal p {
+  font-size: 18px;
+  margin: 24px 0;
+  color: var(--text-primary);
+}
+#delete-confirm.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+#delete-confirm.danger:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--button-shadow-hover);
+}
+#delete-cancel {
+  background: rgba(0,0,0,0.1);
+  color: var(--text-primary);
+}
+#delete-cancel:hover,
+#delete-confirm:hover {
+  transform: translateY(-4px);
 }
 
-async function initializeGapiClient() {
-  await gapi.client.init({
-    apiKey: API_KEY,
-    discoveryDocs: [DISCOVERY_DOC],
-  });
-  gapiInited = true;
-  maybeEnableButtons();
-}
-
-function gisLoaded() {
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
-    callback: () => {},
-  });
-  gisInited = true;
-  maybeEnableButtons();
-}
-
-function maybeEnableButtons() {
-  if (gapiInited && gisInited) {
-    if (localStorage.getItem('googleAccessToken')) {
-      gapi.client.setToken({access_token: localStorage.getItem('googleAccessToken')});
-      googleConnected = true;
-      document.getElementById('connect-google').textContent = 'Google Calendar Conectado ✓';
-      document.getElementById('connect-google').disabled = true;
-    }
+/* ==================== RESPONSIVO PARA MOBILE ==================== */
+@media (max-width: 768px) {
+  main {
+    padding: 20px 15px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .account-card {
+    padding: 24px;
+    border-radius: 20px;
+  }
+  .account-name {
+    font-size: 24px;
+  }
+  .account-details {
+    font-size: 16px;
+  }
+  .days-info {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+  .main-actions {
+    gap: 10px;
+  }
+  .action-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  header {
+    padding: 60px 20px 40px;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  #current-date {
+    font-size: 20px;
+  }
+  .header-buttons {
+    gap: 12px;
+  }
+  button {
+    padding: 14px 24px;
+    font-size: 15px;
   }
 }
-
-function handleAuthClick() {
-  tokenClient.callback = async (resp) => {
-    if (resp.error) {
-      toast('Erro na autenticação: ' + resp.error);
-      return;
-    }
-    localStorage.setItem('googleAccessToken', resp.access_token);
-    googleConnected = true;
-    document.getElementById('connect-google').textContent = 'Google Calendar Conectado ✓';
-    document.getElementById('connect-google').disabled = true;
-    toast('Google Calendar conectado com sucesso!');
-  };
-
-  if (gapi.client.getToken() === null) {
-    tokenClient.requestAccessToken({prompt: 'consent'});
-  } else {
-    tokenClient.requestAccessToken({prompt: ''});
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 30px 20px;
+    width: 95%;
+  }
+  .modal-content h2 {
+    font-size: 28px;
   }
 }
+/* ==================== TELA DE BOAS-VINDAS ==================== */
+.welcome-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
 
-async function addToGoogleCalendar(account) {
-  if (!googleConnected) {
-    toast('Conecte sua conta Google primeiro!');
-    return;
+.welcome-content {
+  text-align: center;
+  color: white;
+  padding: 40px;
+  max-width: 600px;
+}
+
+.welcome-content h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin: 0 0 20px;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #ffffff 0%, #bde0fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-content p {
+  font-size: 24px;
+  margin: 20px 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.subtitle {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 50px;
+}
+
+.start-button {
+  padding: 20px 50px;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.start-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* Classe para esconder a tela */
+.welcome-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+  .welcome-content h1 {
+    font-size: 48px;
   }
-
-  const event = {
-    summary: `Pagar: ${account.name} - R$ ${account.value.toFixed(2)}`,
-    description: `Conta/recorrência: ${account.recurrence || 'mensal'}`,
-    start: { date: account.dueDate, timeZone: Intl.DateTimeFormat().resolvedOptions.timeZone },
-    end: { date: account.dueDate, timeZone: Intl.DateTimeFormat().resolvedOptions.timeZone },
-    reminders: {
-      useDefault: false,
-      overrides: [
-        {method: 'email', minutes: 24 * 60},
-        {method: 'popup', minutes: 30},
-      ],
-    },
-  };
-
-  try {
-    await gapi.client.calendar.events.insert({
-      calendarId: 'primary',
-      resource: event,
-    });
-    toast(`Evento "${account.name}" adicionado ao Google Calendar!`);
-  } catch (err) {
-    toast('Erro ao adicionar ao Calendar: ' + err.message);
+  .welcome-content p {
+    font-size: 20px;
+  }
+  .subtitle {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  .start-button {
+    padding: 18px 40px;
+    font-size: 18px;
   }
 }
-
-// ==================== LÓGICA DO APP ====================
-function updateCurrentDate() {
-  const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-  document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR', options);
-}
-updateCurrentDate();
-
-const toggle = document.getElementById('dark-toggle');
-if (localStorage.getItem('dark') === 'on') {
-  document.body.classList.add('dark');
-  toggle.textContent = 'Modo Claro';
-}
-toggle.onclick = () => {
-  document.body.classList.toggle('dark');
-  const isDark = document.body.classList.contains('dark');
-  toggle.textContent = isDark ? 'Modo Claro' : 'Modo Escuro';
-  localStorage.setItem('dark', isDark ? 'on' : 'off');
-};
-
-const defaultAccounts = [
-  { name: 'Energia Elétrica', value: 178.90, dueDate: '2025-12-20', recurrence: 'mensal', paid: false },
-  { name: 'Internet Fibra', value: 99.90, dueDate: '2025-12-10', recurrence: 'mensal', paid: false }
-];
-
-let accounts = JSON.parse(localStorage.getItem('accounts')) || defaultAccounts;
-
-function save() {
-  localStorage.setItem('accounts', JSON.stringify(accounts));
-}
-
-function getStatus(account) {
-  if (account.paid) return 'paid';
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const due = new Date(account.dueDate);
-  due.setHours(0,0,0,0);
-  const days = Math.ceil((due - today) / 86400000);
-  return days < 0 ? 'overdue' : 'pending';
-}
-
-function getDaysText(account) {
-  if (account.paid) return '✔ Paga';
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const due = new Date(account.dueDate);
-  due.setHours(0,0,0,0);
-  const days = Math.ceil((due - today) / 86400000);
-  if (days < 0) return `Atrasada há ${-days} dia${-days > 1 ? 's' : ''}`;
-  if (days === 0) return 'Vence hoje!';
-  return `Vence em ${days} dia${days > 1 ? 's' : ''}`;
-}
-
-// ==================== MODAIS ====================
-const accountModal = document.getElementById('account-modal');
-const deleteModal = document.getElementById('delete-modal');
-const modalTitle = document.getElementById('modal-title');
-const form = document.getElementById('account-form');
-const inputName = document.getElementById('modal-name');
-const inputValue = document.getElementById('modal-value');
-const inputDate = document.getElementById('modal-due-date');
-const deleteAccountName = document.getElementById('delete-account-name');
-
-let editingIndex = null;
-let deletingIndex = null;
-
-function openAccountModal(isEdit = false, index = null) {
-  editingIndex = isEdit ? index : null;
-  modalTitle.textContent = isEdit ? 'Editar Conta' : 'Nova Conta';
-  
-  if (isEdit) {
-    const account = accounts[index];
-    inputName.value = account.name;
-    inputValue.value = account.value.toFixed(2).replace('.', ',');
-    inputDate.value = account.dueDate;
-  } else {
-    form.reset();
-    const defaultDate = new Date();
-    defaultDate.setDate(defaultDate.getDate() + 30);
-    inputDate.value = defaultDate.toISOString().split('T')[0];
-  }
-  
-  accountModal.classList.add('show');
-  inputName.focus();
-}
-
-function closeAccountModal() {
-  accountModal.classList.remove('show');
-  editingIndex = null;
-}
-
-function openDeleteModal(index) {
-  deletingIndex = index;
-  deleteAccountName.textContent = accounts[index].name;
-  deleteModal.classList.add('show');
-}
-
-function closeDeleteModal() {
-  deleteModal.classList.remove('show');
-  deletingIndex = null;
-}
-
-// Formatação do valor em reais
-inputValue.addEventListener('input', (e) => {
-  let value = e.target.value.replace(/\D/g, '');
-  value = (value / 100).toFixed(2).replace('.', ',');
-  value = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  e.target.value = value;
-});
-
-// Salvamento do formulário (adicionar/editar)
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  
-  const name = inputName.value.trim();
-  if (!name) { toast('Digite o nome da conta'); return; }
-  
-  const valueStr = inputValue.value.replace(/\./g, '').replace(',', '.');
-  const value = parseFloat(valueStr);
-  if (isNaN(value) || value <= 0) { toast('Digite um valor válido'); return; }
-  
-  const dueDate = inputDate.value;
-  if (!dueDate) { toast('Selecione a data de vencimento'); return; }
-  
-  if (editingIndex === null) {
-    accounts.push({ name, value, dueDate, recurrence: 'mensal', paid: false });
-    toast('Nova conta adicionada!');
-  } else {
-    accounts[editingIndex] = { ...accounts[editingIndex], name, value, dueDate };
-    toast('Conta atualizada!');
-  }
-  
-  save();
-  render();
-  closeAccountModal();
-});
-
-// Eventos dos botões dos modais
-document.getElementById('add-button').onclick = () => openAccountModal(false);
-document.getElementById('modal-cancel').onclick = closeAccountModal;
-accountModal.onclick = (e) => { if (e.target === accountModal) closeAccountModal(); };
-
-document.getElementById('delete-cancel').onclick = closeDeleteModal;
-document.getElementById('delete-confirm').onclick = () => {
-  accounts = accounts.filter((_, i) => i !== deletingIndex);
-  save();
-  render();
-  toast('Conta excluída');
-  closeDeleteModal();
-};
-deleteModal.onclick = (e) => { if (e.target === deleteModal) closeDeleteModal(); };
-
-// ==================== RENDER DOS CARDS ====================
-function render() {
-  accounts.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-  const list = document.getElementById('accounts-list');
-  list.innerHTML = '';
-  
-  accounts.forEach((account, index) => {
-    const card = document.createElement('div');
-    card.className = `account-card ${getStatus(account)}`;
-    const daysText = getDaysText(account);
-    
-    card.innerHTML = `
-      <div class="account-name">${account.name}</div>
-      <div class="account-details">
-        R$ ${account.value.toFixed(2).replace('.', ',')} • ${new Date(account.dueDate).toLocaleDateString('pt-BR')}
-      </div>
-      <div class="days-info">${daysText}</div>
-      <div class="main-actions">
-        ${account.paid ? `
-          <button class="action-btn unpay-button">Desmarcar como Paga</button>
-        ` : `
-          <button class="action-btn pay-button">Marcar como Paga</button>
-          <button class="action-btn calendar-button">+ Calendar</button>
-        `}
-        <button class="action-btn edit-button">Editar</button>
-        <button class="action-btn delete-button">Excluir</button>
-      </div>
-    `;
-    
-    // Ações dos botões
-    if (account.paid) {
-      card.querySelector('.unpay-button').onclick = () => {
-        account.paid = false;
-        save();
-        render();
-        toast('Conta desmarcada como paga');
-      };
-    } else {
-      card.querySelector('.pay-button').onclick = () => {
-        account.paid = true;
-        save();
-        render();
-        toast('Conta marcada como paga!');
-      };
-      card.querySelector('.calendar-button').onclick = () => addToGoogleCalendar(account);
-    }
-    
-    card.querySelector('.edit-button').onclick = () => openAccountModal(true, index);
-    card.querySelector('.delete-button').onclick = () => openDeleteModal(index);
-    
-    list.appendChild(card);
-  });
-}
-
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-document.getElementById('connect-google').onclick = handleAuthClick;
-
-render();
